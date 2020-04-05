@@ -2,6 +2,8 @@
 
 Conway's Game of Life written in Rust on GameBoyAdvance
 
+![video](./video.gif)
+
 ## Environment
 
 - Ubuntu19.10
@@ -28,10 +30,10 @@ $ cargo install cargo-xbuild
 make build
 ```
 
-## Play
+## Play in emulator
 
 ```
-visualboyadvance-m hello.gba
+visualboyadvance-m hello.bin
 ```
 
 ## Transfer binary to GameBoyAdvance
