@@ -31,5 +31,7 @@ SECTIONS {
         . = ALIGN(4);
         __bss_end = ABSOLUTE(.);
     } >wram
+
+    __sidata = LOADADDR(.data);
     __wram_end = ORIGIN(wram) + LENGTH(wram) -1 ;
 }

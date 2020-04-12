@@ -30,8 +30,11 @@ static REG_IE: usize = 0x0400_0200;
 static REG_VCOUNT: usize = 0x0400_0006;
 
 extern "C" {
-    static __bss_start: u8;
-    static __bss_end: u8;
+    static mut __bss_start: u8;
+    static mut __bss_end: u8;
+    static mut __data_start: u8;
+    static mut __data_end: u8;
+    static __sidata: u8;
     static __wram_end: u8;
 }
 
@@ -54,6 +57,13 @@ fn wait_for_vsync() {
 
 #[start]
 fn main(_argc: isize, _argv: *const *const u8) -> isize {
+    unsafe {
+        let count = &__bss_end as *const u8 as usize - &__bss_start as *const u8 as usize;
+        core::ptr::write_bytes(&mut __bss_start as *mut u8, 0, count);
+        let count = &__data_end as *const u8 as usize - &__data_start as *const u8 as usize;
+        core::ptr::copy_nonoverlapping(&__sidata as *const u8, &mut __data_start as *mut u8, count);
+    }
+
     init_heap();
     let mut game: Game = Game::new(40, 60);
     unsafe {
