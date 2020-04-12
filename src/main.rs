@@ -1,5 +1,3 @@
-// https://github.com/rust-embedded/bare-metal/blob/master/src/lib.rs
-
 #![no_std]
 #![feature(start)]
 #![feature(alloc_error_handler)]
@@ -28,6 +26,7 @@ fn alloc_error_handler(_: Layout) -> ! {
 #[global_allocator]
 static ALLOCATOR: Heap = Heap::empty();
 
+static REG_IE: usize = 0x0400_0200;
 static REG_VCOUNT: usize = 0x0400_0006;
 
 extern "C" {
@@ -131,8 +130,13 @@ impl<T> Mutex<T> {
     where
         F: FnOnce(&mut T) -> R,
     {
-        // TODO: We need to disable interrupt.
-        unsafe { f(&mut *self.inner.get()) }
+
+        unsafe {
+            let ie = core::ptr::read_volatile(REG_IE as *const u16);
+            let ret = f(&mut *self.inner.get());
+            (REG_IE as *mut u16).write_volatile(ie);
+            ret
+        }
     }
 }
 
