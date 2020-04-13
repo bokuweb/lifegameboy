@@ -1,6 +1,7 @@
 # lifegameboy
 
-Conway's Game of Life written in Rust on GameBoyAdvance
+R.I.P John Conway.
+Conway's Game of Life written in Rust on GameBoyAdvance.
 
 ![video](./video.gif)
 
