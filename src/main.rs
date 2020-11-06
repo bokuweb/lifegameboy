@@ -49,8 +49,8 @@ fn init_heap() {
 
 fn wait_for_vsync() {
     unsafe {
-        while core::ptr::read_volatile(REG_VCOUNT as *const u32) >= 160 {}
-        while core::ptr::read_volatile(REG_VCOUNT as *const u32) < 160 {}
+        while core::ptr::read_volatile(REG_VCOUNT as *const u16) >= 160 {}
+        while core::ptr::read_volatile(REG_VCOUNT as *const u16) < 160 {}
     }
 }
 
@@ -139,7 +139,6 @@ impl<T> Mutex<T> {
     where
         F: FnOnce(&mut T) -> R,
     {
-
         unsafe {
             let ie = core::ptr::read_volatile(REG_IE as *const u16);
             let ret = f(&mut *self.inner.get());
